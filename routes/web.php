@@ -47,6 +47,9 @@ Route::get('/register', [UserController::class, 'create'])->middleware('guest');
 //save registered data
 Route::post('/users', [UserController::class, 'store']);
 
+//verify email
+Route::get('/verify-email/{otp}', [UserController::class, 'verifyEmail'])->name('verify.email');
+
 //log user out
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
 
@@ -56,4 +59,5 @@ Route::get('/login', [UserController::class, 'login'])->name('authorization')->m
 
 //Log In User 
 Route::post('/users/authenticate', [UserController::class, 'authenticate']);
+
 

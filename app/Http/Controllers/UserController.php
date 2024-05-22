@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Jobs\SendEmailVerification;
 
 class UserController extends Controller
 {
@@ -21,7 +23,6 @@ class UserController extends Controller
     public function create()
     {
         return view('users.register');
-
     }
 
     /**
@@ -29,9 +30,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $otp = Str::random(6);
         $formValidation  = $request->validate([
             'name' => ['required', 'min:3'],
-            'email' =>['required', 'email', Rule::unique('users', 'email')],
+            'email' => ['required', 'email', Rule::unique('users', 'email')],
             'password' => 'required|confirmed|min:6'
         ]);
 
@@ -39,6 +41,10 @@ class UserController extends Controller
         $formValidation['password'] = bcrypt($formValidation['password']);
 
         $user = User::create($formValidation);
+        $user->otp_code = $otp;
+        $user->save();
+        // Dispatch job to send email for email verification
+        SendEmailVerification::dispatch($user);
 
         //login
         auth()->login($user);
@@ -46,8 +52,21 @@ class UserController extends Controller
         return redirect('/')->with('message', 'user created and logged successfully!');
     }
 
+    //verify email
+    public function verifyEmail($otp)
+    {
+        $user = User::where('otp_code', $otp)->first();
+        $user->email_verified_at = now();
+        $user->otp_code = null;
+        $user->save();
+        //login
+        auth()->login($user);
+        return redirect('/')->with('message', 'Account verified successfully!');
+    }
+
     //Logout User
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         auth()->logout(); //remove authenticatn infomation from the user session
 
         //invalidate user sessions
@@ -56,7 +75,6 @@ class UserController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/')->with('message', 'You have been logged out!');
-
     }
 
     /**
@@ -71,12 +89,12 @@ class UserController extends Controller
     public function authenticate(Request $request)
     {
         $formValidation  = $request->validate([
-            'email' =>['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => 'required'
         ]);
 
         //attmempt to log in user
-        if(auth()->attempt($formValidation)){
+        if (auth()->attempt($formValidation)) {
             $request->session()->regenerate();
 
             return redirect('/')->with('logged in successfully');
@@ -84,5 +102,4 @@ class UserController extends Controller
 
         return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
     }
-
 }

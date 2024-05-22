@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('location');
             $table->string('email');
             $table->string('website');
-            $table->string('description');
+            $table->text('description');
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
 
         });

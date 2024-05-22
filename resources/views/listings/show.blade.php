@@ -5,9 +5,10 @@
 <x-layout>
 
 
-<a href="/" class="inline-block text-black ml-4 mb-4"
+<a href="/" class="inline-block text-white bg-gray-800 ml-4 mb-4 mt-8 py-2 px-4 rounded-lg transition hover:opacity-80 duration-200"
 ><i class="fa-solid fa-arrow-left"></i> Back
 </a>
+    
 <div class="mx-4">
 <x-card>
     <div
@@ -15,7 +16,7 @@
     >
         <img
             class="w-48 mr-6 mb-6"
-            src="{{ $listing->logo ? asset('storage/' . $listing->logo) : asset('/images/no-image.png') }}"
+            src="{{ $listing->logo ? $listing->logo : asset('/images/briefcase.png') }}"
             alt=""
         />
 
@@ -25,17 +26,21 @@
         <div class="text-lg my-4">
             <i class="fa-solid fa-location-dot"></i> {{ $listing->location }}
         </div>
-        <div class="border border-gray-200 w-full mb-6"></div>
+        <div class="border border-gray-200  mb-6"></div>
         <div>
             <h3 class="text-3xl font-bold mb-4">
                 Job Description
             </h3>
-            <div class="text-lg space-y-6">
-                {{ $listing->description }}
+            <div class="text-lg w-full space-y-6">
+                <p class="text-left">
+                    {{ $listing->description }}
 
-                <a
+                </p>
+
+                <div class="mx-auto width w-1/2 space-y-6">
+                    <a
                     href="mailto:{{ $listing->email }}"
-                    class="block bg-laravel text-white mt-6 py-2 rounded-xl hover:opacity-80"
+                    class="block bg-laravel text-white mt-6 py-2 rounded-xl hover:opacity-80 transition duration-200"
                     ><i class="fa-solid fa-envelope"></i>
                     Contact Employer</a
                 >
@@ -43,29 +48,36 @@
                 <a
                     href="{{ $listing->website }}"
                     target="_blank"
-                    class="block bg-black text-white py-2 rounded-xl hover:opacity-80"
+                    class="block bg-black text-white py-2 rounded-xl hover:opacity-80 transition duration-200"
                     ><i class="fa-solid fa-globe"></i> Visit
                     Website</a 
                 >
+                </div>
+
+
             </div>
         </div>
     </div>
 </x-card>
-<x-card class="mt-4 p-2 flex space-x-6">
-    <a href="/listings/{{ $listing->id }}/edit">
-        <i class="fa-solid fa-pencil">
-        </i> Edit
-    </a>
+@auth
+    @if(auth()->id() == $listing->user_id)
+        <x-card class="mt-4 p-2 flex space-x-6">
+            <a href="/listings/{{ $listing->id }}/edit" class="hover:opacity-80 transition duration-200">
+                <i class="fa-solid fa-pencil"></i> Edit
+            </a>
+        
+            <form method="POST" action="/listings/{{ $listing->id }}/delete">
+                @csrf
+                @method('DELETE')
+                <button class="text-red-500 hover:opacity-80 transition duration-200">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </button>
+            </form>
+        </x-card>
+    @endif
+@endauth
 
-    <form method="POST" action="/listings/{{ $listing->id }}/delete">
-    @csrf
-    @method('DELETE')
-        <button class="text-red-500">
-            <i class="fa-solid fa-trash"></i>
-            Delete
-        </button>
-    </form>
-</x-card>
+
 </div>
 
 </x-layout>
