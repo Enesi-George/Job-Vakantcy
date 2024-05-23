@@ -25,6 +25,7 @@
                 },
             };
         </script>
+            <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <title>JobVakantcy | Find your next career Jobs & Projects</title>
     </head>
     <body class="">
@@ -38,8 +39,12 @@
     <main>    
         {{ $slot }}
     </main>
+
+    <div class="mt-12 p-4 bg-gray-100">
+        Ads space
+    </div>
 <footer
-class="bottom-0 left-0 w-full flex items-center justify-start font-bold bg-laravel text-white h-24 mt-24 opacity-90 md:justify-center"
+class="bottom-0 left-0 w-full flex items-center justify-start font-bold bg-laravel text-white h-24 opacity-90 md:justify-center"
 >
 <p class="ml-2">Copyright &copy; 2024, All Rights reserved</p>
 
@@ -50,17 +55,7 @@ class="bottom-0 left-0 w-full flex items-center justify-start font-bold bg-larav
 >
 </footer>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const dropdownToggle = document.getElementById("dropdown-toggle");
-        const dropdownMenu = document.getElementById("dropdown-menu");
-        const body = document.body;
 
-        dropdownToggle.addEventListener("click", function () {
-            dropdownMenu.classList.toggle("hidden");
-            body.classList.toggle("overflow-hidden");
-        });
-    });
-</script>
+<script src="{{ asset('js/blades.js') }}"></script>
 </body>
 </html>

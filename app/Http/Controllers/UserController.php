@@ -49,19 +49,24 @@ class UserController extends Controller
         //login
         auth()->login($user);
 
-        return redirect('/')->with('message', 'user created and logged successfully!');
+        return redirect('/')->with('message', 'Registered!. Kindly verify account via your mail');
     }
 
     //verify email
     public function verifyEmail($otp)
     {
-        $user = User::where('otp_code', $otp)->first();
-        $user->email_verified_at = now();
-        $user->otp_code = null;
-        $user->save();
-        //login
-        auth()->login($user);
-        return redirect('/')->with('message', 'Account verified successfully!');
+            $user = User::where('otp_code', $otp)->first();
+            if(!$user){
+                return redirect('/')->with('message', 'Invalid verification token');
+
+            }else if(isset($user->email_verified_at)){
+                return redirect('/')->with('message', 'Account already verified');
+            }
+            $user->email_verified_at = now();
+            $user->save();
+            //login
+            auth()->login($user);
+            return redirect('/')->with('message', 'Account verified successfully!');
     }
 
     //Logout User

@@ -10,18 +10,23 @@
         {{-- Listings Container --}}
         <div class="lg:col-span-2">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                @unless (count($listings->filter(fn($listing) => $listing->is_verified)) == 0)
-                @foreach($listings as $index => $listing)
-                    {{-- IMPORTING COMPONENT --}}
-                    <x-listing-card :listing="$listing" />
+                {{-- Filter the listings to include only those with verified_at --}}
+                @php
+                    $verifiedListings = $listings->filter(fn($listing) => $listing->is_verified);
+                @endphp
 
-                    {{-- Insert ads div every 4th card --}}
-                    @if (($index + 1) % 4 == 0)
-                        <div class="md:col-span-2 lg:col-span-1 mt-6 p-4 bg-gray-100">
-                            ads space
-                        </div>
-                    @endif
-                @endforeach
+                @unless (count($verifiedListings) == 0)
+                    @foreach($verifiedListings as $index => $listing)
+                        {{-- IMPORTING COMPONENT --}}
+                        <x-listing-card :listing="$listing" />
+
+                        {{-- Insert ads div every 4th card --}}
+                        @if (($index + 1) % 4 == 0)
+                            <div class="md:col-span-2 lg:col-span-1 mt-6 p-4 bg-gray-100">
+                                ads space
+                            </div>
+                        @endif
+                    @endforeach
                 @else
                     <p>No listings found</p>
                 @endunless
@@ -38,7 +43,6 @@
     {{-- <div class="mt-6 p-4">
         {{ $listings->links() }}
     </div> --}}
-    </x-layout>
+</x-layout>
     
-    {{-- @endsection --}}
-    
+{{-- @endsection --}}

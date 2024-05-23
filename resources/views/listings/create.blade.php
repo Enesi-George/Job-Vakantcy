@@ -6,12 +6,11 @@ class="bg-gray-50 border border-gray-200 p-10 max-w-lg mx-auto mt-24"
     <h2 class="text-2xl font-bold uppercase mb-1">
         Create a Gig
     </h2>
-    <p class="mb-4">Post a gig to find a developer</p>
+    <p class="mb-4">Post a job today</p>
 </header>
 
 <form action="/listings" method="POST" enctype="multipart/form-data">
     @csrf
-
     <div class="mb-6">
         <label
             for="company"
@@ -63,6 +62,25 @@ class="bg-gray-50 border border-gray-200 p-10 max-w-lg mx-auto mt-24"
             value="{{ old('location') }}"
         />
         @error('location')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        
+    @enderror
+    </div>
+
+    <div class="mb-6">
+        <label
+            for="salary"
+            class="inline-block text-lg mb-2"
+            >Salary</label
+        >
+        <input
+            type="text"
+            class="border border-gray-200 rounded p-2 w-full"
+            name="salary"
+            placeholder="200,000 - 320,000"
+            value="{{ old('salary') }}"
+        />
+        @error('salary')
         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
         
     @enderror
@@ -147,10 +165,44 @@ class="bg-gray-50 border border-gray-200 p-10 max-w-lg mx-auto mt-24"
             class="border border-gray-200 rounded p-2 w-full"
             name="description"
             rows="10"
-            placeholder="Include tasks, requirements, salary, etc"
+            placeholder="Include Job Description..."
         >{{ old('company') }}</textarea>
 
         @error('description')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        
+    @enderror
+    </div>
+
+    <div class="mb-6">
+        <label for="requirements" class="inline-block text-lg mb-2">
+            Requirements (Dot Separated)
+        </label>
+        <input
+            type="text"
+            class="border border-gray-200 rounded p-2 w-full"
+            name="requirements"
+            placeholder="Example: 5years exp., MS-Excel proficient, etc"
+            value="{{ old('requirements') }}"
+        />
+        @error('requirements')
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        
+    @enderror
+    </div>
+
+    <div class="mb-6">
+        <label for="deadline" class="inline-block text-lg mb-2">
+            Deadline
+        </label>
+        <input
+            type="date"
+            class="border border-gray-200 rounded p-2 w-full"
+            name="deadline"
+            min="{{ date('Y-m-d') }}"  
+        />
+        
+        @error('deadline')
         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
         
     @enderror

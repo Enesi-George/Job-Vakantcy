@@ -1,1 +1,14 @@
+#dropdown-menu {
+    right: -100%; /* Initially hidden off the screen */
+}
+#dropdown-menu:not(.hidden) {
+    right: 0;
+}
 
+.fa-eye, .fa-eye-slash {
+    position: absolute;
+    right: 1rem;
+    top: 50px;
+    cursor: pointer;
+    color: #6b7280; /* Tailwind Gray-500 */
+}

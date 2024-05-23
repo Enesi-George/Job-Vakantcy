@@ -29,7 +29,7 @@
         @enderror
         </div>
 
-        <div class="mb-6">
+        <div class="mb-6 relative">
             <label
                 for="password"
                 class="inline-block text-lg mb-2"
@@ -40,18 +40,18 @@
                 type="password"
                 class="border border-gray-200 rounded p-2 w-full"
                 name="password"
+                id="password"
                 value="{{ old('password') }}"
             />
+            <i class="fa fa-eye absolute right-3 cursor-pointer" id="togglePassword" onclick="togglePasswordVisibility('password')"></i>
+
             @error('password')
             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
         @enderror
         </div>
 
         <div class="mb-6">
-            <button
-                type="submit"
-                class="bg-laravel text-white rounded py-2 px-4 hover:bg-black"
-            >
+            <button type="submit" class="bg-laravel text-white rounded py-2 px-4 hover:opacity-80 duration-200">
                 Sign In
             </button>
         </div>

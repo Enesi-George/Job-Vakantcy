@@ -8,6 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Listing extends Model
 {
     use HasFactory;
+    
+    protected $fillable = [
+        'title',
+        'company',
+        'location',
+        'website',
+        'email',
+        'tags',
+        'salary',
+        'deadline',
+        'description',
+        'requirements',
+        'logo'
+    ];
+    
 
     //instead of creating a protedted below, use Model::unguard() inside APP/ServiceProvider.php
     // protected $fillable = ['title', 'company', 'location', 'email','website', 'tags', 'description'];

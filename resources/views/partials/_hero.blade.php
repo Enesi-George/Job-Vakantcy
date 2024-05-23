@@ -20,7 +20,7 @@
                 <div>
                     <a
                         href="register.html"
-                        class="inline-block border-2 border-white text-white py-2 px-4 rounded-xl uppercase mt-2 hover:text-black hover:border-black"
+                        class="inline-block border-2 border-white text-white py-2 px-4 rounded-xl uppercase mt-2 hover:text-black hover:border-black transition duration-500"
                         >Sign Up to List a Gig</a
                     >
                 </div>
