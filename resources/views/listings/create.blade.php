@@ -166,7 +166,7 @@ class="bg-gray-50 border border-gray-200 p-10 max-w-lg mx-auto mt-24"
             name="description"
             rows="10"
             placeholder="Include Job Description..."
-        >{{ old('company') }}</textarea>
+        >{{ old('description') }}</textarea>
 
         @error('description')
         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -200,11 +200,10 @@ class="bg-gray-50 border border-gray-200 p-10 max-w-lg mx-auto mt-24"
             class="border border-gray-200 rounded p-2 w-full"
             name="deadline"
             min="{{ date('Y-m-d') }}"  
-        />
-        
+            value="{{ old('deadline') }}"
+        />    
         @error('deadline')
-        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-        
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>      
     @enderror
     </div>
 

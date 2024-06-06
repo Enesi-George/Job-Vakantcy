@@ -1,8 +1,14 @@
 <x-layout>
     <x-card class="p-10">
-        {{-- @include('users.account-setting') --}}
+
+        <a href="/user/edit">
+            <h1 class="text-lg text-left font-bold my-4 uppercase cursor-pointer hover:text-laravel transition duration-300">
+                Manage Account
+            </h1>
+        </a>
+
         <header>
-            <h1 class="text-3xl text-left font-bold my-6 uppercase cursor-pointer" id="manage-posts-toggle">
+            <h1 class="text-lg text-left font-bold my-4 uppercase cursor-pointer hover:text-laravel transition duration-300" id="manage-posts-toggle">
                 Manage Post
                 <i class="fa-solid fa-chevron-down ml-2" id="toggle-icon"></i>
             </h1>

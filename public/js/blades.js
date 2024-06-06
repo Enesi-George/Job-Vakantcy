@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-//settings
-
+//SETTINGS
+//manage post
 document.addEventListener("DOMContentLoaded", function () {
     const managePostsToggle = document.getElementById("manage-posts-toggle");
     const managePostsContent = document.getElementById("manage-posts-content");
@@ -55,10 +55,54 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+//manage account
+document.addEventListener("DOMContentLoaded", function () {
+    const managePostsToggle = document.getElementById("manage-account-toggle");
+    const managePostsContent = document.getElementById("manage-account-content");
+    const toggleIcon = document.getElementById("toggle-account-icon");
+
+    managePostsToggle.addEventListener("click", function () {
+        managePostsContent.classList.toggle("hidden");
+
+        if (managePostsContent.classList.contains("hidden")) {
+            toggleIcon.classList.remove("fa-chevron-up");
+            toggleIcon.classList.add("fa-chevron-down");
+        } else {
+            toggleIcon.classList.remove("fa-chevron-down");
+            toggleIcon.classList.add("fa-chevron-up");
+        }
+    });
+});
+
 
 //authentication
-// password toggler
+//form validation
 
+function validateForm() {
+    const name = document.getElementById('name').value;
+    const password = document.getElementById('password').value;
+    const nameRegex = /^[A-Z][a-z]+\s[A-Z][a-z]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    let isValid = true;
+
+    if (!nameRegex.test(name)) {
+        document.getElementById('nameError').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('nameError').style.display = 'none';
+    }
+
+    if (!passwordRegex.test(password)) {
+        document.getElementById('passwordError').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('passwordError').style.display = 'none';
+    }
+
+    return isValid;
+}
+// password toggler
 function togglePasswordVisibility(id) {
     const passwordField = document.getElementById(id);
     const toggleIcon = passwordField.nextElementSibling;
@@ -73,3 +117,4 @@ function togglePasswordVisibility(id) {
         toggleIcon.classList.add("fa-eye");
     }
 }
+
