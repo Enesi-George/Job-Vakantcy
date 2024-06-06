@@ -160,6 +160,48 @@
             
         @enderror
         </div>
+
+        <div class="mb-6">
+            <label
+                for="requirements"
+                class="inline-block text-lg mb-2"
+            >
+            Requirements (Dot Separated)
+            </label>
+            <textarea
+                class="border border-gray-200 rounded p-2 w-full"
+                name="requirements"
+                rows="10"
+                placeholder="Include tasks, requirements, salary, etc"
+            >{{ $listing->requirements }}</textarea>
+    
+            @error('requirements')
+            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            
+        @enderror
+        </div>
+
+        <div class="mb-6">
+            <label
+                for="deadline"
+                class="inline-block text-lg mb-2"
+            >
+                Deadline
+            </label>
+            <input
+                type="date"
+                class="border border-gray-200 rounded p-2 w-full"
+                name="deadline"
+                min="{{ date('Y-m-d') }}"  
+                value="{{ $listing->deadline }}"
+            />
+            @error('deadline')
+            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            
+        @enderror
+        </div>
+
+
     
         <div class="mb-6">
             <button
@@ -170,6 +212,8 @@
     
             <a href="/" class="text-black ml-4"> Back </a>
         </div>
+
+
     </form>
     </x-card>
     

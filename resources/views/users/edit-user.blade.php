@@ -1,14 +1,18 @@
 <x-layout>
+    <a href="javascript:window.history.back();" class="inline-block text-white bg-gray-800 ml-4 mb-4 mt-8 py-2 px-4 rounded-lg transition hover:opacity-80 duration-200"
+    ><i class="fa-solid fa-arrow-left"></i> Back
+    </a>
     <x-card class="p-10 rounded max-w-lg mx-auto mt-16">
+
         <header class="text-center">
             <h2 class="text-2xl font-bold uppercase mb-1">
-                Register
+                Edit Profile
             </h2>
-            <p class="mb-4">Create an account to post gigs</p>
         </header>
 
-        <form method="POST" action="/users/" onsubmit="return validateForm()">
+        <form action="/user/update" method="post" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
 
             <div class="mb-6">
                 <label for="name" class="inline-block text-lg mb-2">Name</label>
@@ -17,7 +21,7 @@
                     class="border border-gray-200 rounded p-2 w-full"
                     name="name"
                     id="name"
-                    value="{{ old('name') }}"
+                    value="{{ old('name',  $user->name) }}"
                 />
                 @error('name')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -32,12 +36,30 @@
                     class="border border-gray-200 rounded p-2 w-full"
                     name="email"
                     id="email"
-                    value="{{ old('email') }}"
+                    disabled
+                    value="{{ old('email',  $user->email) }}"
                 />
                 @error('email')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
+
+            <div class="mb-6">
+                <button type="submit" class="bg-laravel text-white rounded py-2 px-4 hover:opacity-80 duration-200">
+                    Update
+                </button>
+            </div>        
+        </form>
+
+        <form action="/user/reset-password" method="post" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            <header class="text-left">
+                <h2 class="text-lg font-bold uppercase mb-1">
+                    Change Password
+                </h2>
+            </header>
 
             <div class="mb-6 relative">
                 <label for="password" class="inline-block text-lg mb-2">Password</label>
@@ -72,17 +94,9 @@
 
             <div class="mb-6">
                 <button type="submit" class="bg-laravel text-white rounded py-2 px-4 hover:opacity-80 duration-200">
-                    Sign Up
+                    Change Password
                 </button>
-            </div>
-
-            <div class="mt-8">
-                <p>
-                    Already have an account?
-                    <a href="/login" class="text-laravel">Login</a>
-                </p>
-            </div>
+            </div>  
         </form>
     </x-card>
-
 </x-layout>

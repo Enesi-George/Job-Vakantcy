@@ -60,4 +60,11 @@ Route::get('/login', [UserController::class, 'login'])->name('authorization')->m
 //Log In User 
 Route::post('/users/authenticate', [UserController::class, 'authenticate']);
 
+//show Edit user form
+Route::get('/user/edit', [UserController::class, 'edit'])->middleware('auth');
 
+// update user
+Route::put('/user/update', [UserController::class, 'update'])->middleware('auth');
+
+// reset password
+Route::put('/user/reset-password', [UserController::class, 'resetPassword'])->middleware('auth');
