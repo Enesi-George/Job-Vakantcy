@@ -35,14 +35,32 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'min:3', 'regex:/^[A-Z][a-z]+\s[A-Z][a-z]+$/'],
-            'email' => ['required', 'email', Rule::unique('users', 'email')],
+            'name' => [
+                'required',
+                'unique:users,name', 
+                'min:3',
+                'regex:/^[A-Z][a-z]+\s[A-Z][a-z]+$/'
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')
+            ],
             'password' => [
                 'required',
                 'confirmed',
                 'min:8',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
             ]
+        ];
+    }
+    
+
+    public function messages(): array
+    {
+        return [
+            'name.regex' => 'The name field must be in the format "First Last" with each name starting with a capital letter.',
+            'password.regex' => 'The password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.',
         ];
     }
 

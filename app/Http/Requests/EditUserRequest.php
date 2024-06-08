@@ -34,7 +34,7 @@ class EditUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['min:3', 'regex:/^[A-Z][a-z]+\s[A-Z][a-z]+$/'],
+            'name' => ['min:3', 'unique:users,name', 'regex:/^[A-Z][a-z]+\s[A-Z][a-z]+$/'],
             'email' => ['email', Rule::unique('users', 'email')],
             'password' => [
                 'confirmed',

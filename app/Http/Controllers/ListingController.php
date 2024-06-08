@@ -46,7 +46,7 @@ class ListingController extends Controller
 
             // Check if the user's email is verified
             if (!auth()->user()->email_verified_at) {
-                return redirect('/')->with('message', 'Account is not verified!');
+                return redirect('/listings/create')->with('error', 'Account is not verified!. Please verify to continue');
             }
 
             $formFieldsValidation['user_id'] = auth()->id();
