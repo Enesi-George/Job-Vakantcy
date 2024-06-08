@@ -27,7 +27,7 @@
                             @endif
                         @endforeach
                     @else
-                        <p>No listings found</p>
+                        <p class="">No job post found</p>
                     @endunless
                 </div>
             </div>

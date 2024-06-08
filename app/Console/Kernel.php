@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:clean-up-temp-file')->everyTenMinutes();
+        $schedule->command('sitemap:generate')->daily();
+
     }
 
     /**
