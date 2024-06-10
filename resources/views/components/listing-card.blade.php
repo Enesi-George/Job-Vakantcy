@@ -13,16 +13,14 @@
                 src="{{ $listing->logo ? $listing->logo : asset('/images/briefcase.png') }}"
                 alt=""
             />
-                <div class="flex-shrink-0">
 
-                </div>
                 <div class="ml-6">
                     <h3 class="text-2xl shrink">
                         {{ $listing->title }}
                     </h3>
                     <div class="text-xl font-bold mb-4">{{ $listing->company }}</div>
     
-                    <x-listing-tags :tagsCsv="$listing->tags" />
+                    <x-listing-tags :tagsCsv="$listing->tags" class="flex-shrink" />
                         
                     <div class="text-lg mt-4">
                         <i class="fa-solid fa-location-dot"></i> {{$listing->location}}

@@ -16,25 +16,37 @@ else
     echo "env file exists."
 fi
 
-# Laravel setup commands
-php artisan migrate --force
-php artisan key:generate --force
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
-php artisan optimize:clear
+role=${CONTAINER_ROLE:-app}
 
-# Start the queue worker in the background
-php artisan queue:work &
+if [ "$role" = "app" ]; then
+    # Laravel setup commands
+    php artisan migrate --force
+    php artisan key:generate --force
+    php artisan cache:clear
+    php artisan config:clear
+    php artisan route:clear
+    php artisan optimize:clear
 
-# Run Laravel scheduler in background
-while true; do
-    php artisan schedule:run --no-interaction --quiet
-    sleep 60
-done &
+    # Run Laravel scheduler in background
+    while true; do
+        php artisan schedule:run --no-interaction --quiet
+        sleep 60
+    done &
 
-# Start Laravel server
-php artisan serve --port=$PORT --host=0.0.0.0 --env=.env
+    # Start Laravel server
+    php artisan serve --port=$PORT --host=0.0.0.0 --env=.env
 
-# Run the default entrypoint command
-exec docker-php-entrypoint "$@"
+    # Run the default entrypoint command
+    exec docker-php-entrypoint "$@"
+
+elif [ "$role" = "queue" ]; then
+    echo "Running the queue ..."
+    php /var/www/artisan queue:work --verbose --tries=3 --timeout=180
+
+elif [ "$role" = "websocket" ]; then
+    echo "Running the websocket server ..."
+    php artisan websockets:serve
+
+fi;
+
+
