@@ -26,3 +26,17 @@ ENV PORT=8000
 
 #define an entry point to run scripts
 ENTRYPOINT [ "docker/entrypoint.sh" ]
+
+# ==================================================
+# node service
+
+FROM node:20-alpine as node
+
+#copy project files into the server
+WORKDIR /var/www
+COPY . .  
+
+RUN npm install --global cross-env
+RUN npm install
+
+VOLUME /var/www/node_modules

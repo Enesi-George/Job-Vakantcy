@@ -14,6 +14,8 @@
             @csrf
             @method('PUT')
 
+            
+
             <div class="mb-6">
                 <label for="name" class="inline-block text-lg mb-2">Name</label>
                 <input
