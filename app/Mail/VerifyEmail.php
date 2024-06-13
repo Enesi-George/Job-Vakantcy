@@ -25,7 +25,7 @@ class VerifyEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Verify Your Email')
+        return $this->subject(config('app.name') . ': Verify Your Email')
             ->markdown('emails.verify')
             ->with([
                 'emailVerificationLink' => $this->generateVerifyEmailLink(),

@@ -50,6 +50,9 @@ Route::post('/users', [UserController::class, 'store']);
 //verify email
 Route::get('/verify-email/{otp}', [UserController::class, 'verifyEmail'])->name('verify.email');
 
+//resend verificaion otp
+Route::get('/user/resend-verify-email', [UserController::class, 'resendVerifyEmailOtp']);
+
 //log user out
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
 

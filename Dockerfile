@@ -1,4 +1,8 @@
-FROM php:8.2 as php
+# FROM php:8.2 as php
+
+# Set the platform to linux/amd64
+FROM --platform=linux/amd64 php:8.2 as php
+
 
 # Install dependencies
 RUN apt-get update -y
@@ -30,7 +34,10 @@ ENTRYPOINT [ "docker/entrypoint.sh" ]
 # ==================================================
 # node service
 
-FROM node:20-alpine as node
+# FROM node:20-alpine as node
+
+# Set the platform to linux/amd64 for node service
+FROM --platform=linux/amd64 node:20-alpine as node
 
 #copy project files into the server
 WORKDIR /var/www

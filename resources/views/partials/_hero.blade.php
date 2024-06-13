@@ -9,7 +9,7 @@
 
     <div class="z-10">
         <h1 class="text-6xl font-bold uppercase text-white">
-            Job<span class="text-black">Vakantcy</span>
+            Job<span class="text-gray-800">Vakantcy</span>
         </h1>
         <p class="text-2xl text-gray-200 font-bold my-4">
             Find or post career jobs & projects

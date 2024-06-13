@@ -25,6 +25,7 @@
             },
         };
     </script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <title>JobVakantcy | Find your next career Jobs & Projects</title>
     <style>
@@ -47,9 +48,9 @@
         }
     </style>
 </head>
-<body x-data="{ loading: true }" x-init="loading = false">
+<body x-data="{ loading: true }" x-init="$nextTick(() => { loading = false; })">
     <!-- Spinner -->
-    <div x-show="loading" class="spinner fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+    <div x-show="loading" class="spinner fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50" style="display: flex;">
         <div class="loader"></div>
     </div>
     

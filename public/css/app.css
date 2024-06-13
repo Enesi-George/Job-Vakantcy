@@ -1,3 +1,35 @@
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color of the scrollbar track */
+    border-radius: 10px; /* Border radius of the track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e293b; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Border radius of the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #334155; /* Color of the scrollbar thumb when hovered */
+}
+
+/* In your CSS file or <style> tag */
+.hover-switch:hover .job {
+    color: #2d3748; /* Tailwind gray-800 */
+}
+
+.hover-switch:hover .vakantcy {
+    color: #ef4444; /* Tailwind red-500 */
+}
+
 #dropdown-menu {
     right: -100%; /* Initially hidden off the screen */
 }
