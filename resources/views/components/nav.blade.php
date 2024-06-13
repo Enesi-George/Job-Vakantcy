@@ -4,8 +4,12 @@
         <img class="w-12 md:w-24" src="{{ asset('images/briefcase.png') }}" alt="Logo">
         @if (!Request::is('/'))
             <h1 class="text-3xl md:text-6xl font-bold uppercase text-white my-auto drop-shadow-md">
-                <span class="text-red-500">Job</span> <span class="text-black">Vakantcy</span>
+                <span class="hover-switch">
+                    <span class="text-red-500 transition-colors duration-300 ease-in-out job">Job</span>
+                    <span class="text-gray-800 transition-colors duration-300 ease-in-out vakantcy">Vakanty</span>
+                </span>
             </h1>
+            
         @endif
     </a>
     <ul class="flex space-x-6 mr-6 text-lg hidden lg:flex">

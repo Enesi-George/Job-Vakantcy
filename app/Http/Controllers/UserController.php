@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\EditUserRequest;
 use App\Http\Requests\RegisterRequest;
@@ -101,6 +102,47 @@ class UserController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
             return redirect('/')->with('error', 'Error while verifying. Please contact the administrative.');
+        }
+    }
+
+    // Resend email verification OTP
+    public function resendVerifyEmailOtp()
+    {
+        try {
+            // Generate a random OTP
+            $otp = Str::random(6);
+
+            // Get the authenticated user
+            $user = Auth::user();
+
+            // // Check if the user is authenticated
+            // if (!$user) {
+            //     return response()->json(['error' => 'Unauthenticated.'], 401);
+            // }
+
+            // Check if the user's email is already verified
+            if ($user->email_verified_at) {
+                return back()->with('error', 'Account already verified');
+            }
+            // Set the OTP and expiration time
+            $user->otp_code = $otp;
+            $user->otp_expires_at = now()->addMinutes(10);
+            $user->save();
+
+            // Dispatch job to send email for email verification
+            SendEmailVerificationJob::dispatch($user);
+
+            // Return a success response
+            return back()->with(['message' => 'Verification OTP has been sent to your email.'], 200);
+        } catch (\Exception $e) {
+            // Log the error with a more descriptive message
+            Log::error('Error resending verification OTP', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            // Return an error response
+            return back()->withErrors(['error' => 'Error while resending OTP. Please contact the administrator.'], 500);
         }
     }
 
