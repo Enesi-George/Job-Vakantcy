@@ -28,6 +28,9 @@ COPY --from=composer:2.6.5 /usr/bin/composer /usr/bin/composer
 #set port variable
 ENV PORT=8000
 
+# expose port 8000
+EXPOSE 8000
+
 #define an entry point to run scripts
 ENTRYPOINT [ "docker/entrypoint.sh" ]
 
@@ -48,5 +51,4 @@ RUN npm install
 
 VOLUME /var/www/node_modules
 
-# expose port 8000
-EXPOSE 8000
+
