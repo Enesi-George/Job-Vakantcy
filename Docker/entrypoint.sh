@@ -18,6 +18,9 @@ fi
 
 role=${CONTAINER_ROLE:-app}
 
+echo "Container role is: $role"
+echo "PORT is: $PORT"
+
 if [ "$role" = "app" ]; then
     # Laravel setup commands
     php artisan migrate --force
@@ -36,8 +39,8 @@ if [ "$role" = "app" ]; then
     # Start Laravel server
     php artisan serve --port=$PORT --host=0.0.0.0 --env=.env
 
-    # Run the default entrypoint command
-    exec docker-php-entrypoint "$@"
+    # Keep the container running
+    tail -f /dev/null
 
 elif [ "$role" = "queue" ]; then
     echo "Running the queue ..."
@@ -48,5 +51,3 @@ elif [ "$role" = "websocket" ]; then
     php artisan websockets:serve
 
 fi;
-
-
