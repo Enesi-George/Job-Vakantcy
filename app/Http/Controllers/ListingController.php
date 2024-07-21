@@ -46,7 +46,7 @@ class ListingController extends Controller
             'email' => ['required', 'email'],
             'tags' => 'required',
             'salary' => 'string|nullable',
-            'deadline' => 'string|nullable|date|after_or_equal:today',// Ensuring the date is today or in the future
+            'deadline' => 'string|nullable|date|after_or_equal:today', // Ensuring the date is today or in the future
             'description' => 'required',
             'requirements' => 'required'
         ]);
@@ -89,7 +89,7 @@ class ListingController extends Controller
         if ($listing->user_id != auth()->id()) {
             abort(403, 'Unauthorized Action');
         }
-    
+
         try {
             // Validate the form fields
             $formFieldsValidation = $request->validate([
@@ -104,19 +104,19 @@ class ListingController extends Controller
                 'description' => 'required',
                 'requirements' => 'required'
             ]);
-       
+
             // Handle file upload
             if ($request->hasFile('logo')) {
                 $uploadedFileUrl = Cloudinary::upload($request->file('logo')->getRealPath())->getSecurePath();
                 $formFieldsValidation['logo'] = $uploadedFileUrl;
                 Log::info('Logo uploaded URL:', ['logo' => $uploadedFileUrl]);
             }
-    
+
             // Update the listing
             $listing->update($formFieldsValidation);
-    
+
             Log::info('Listing updated successfully:', $listing->toArray());
-    
+
             // Redirect with a success message
             return back()->with('message', 'Post updated!');
         } catch (\Exception $e) {
@@ -125,7 +125,7 @@ class ListingController extends Controller
             return back()->with('error', 'There was an error updating the post.');
         }
     }
-    
+
     //show single Listing
     public function show(Listing $listing)
     {
@@ -149,5 +149,15 @@ class ListingController extends Controller
     public function manageListing()
     {
         return view('listings.manage', ['listings' => auth()->user()->listings()->get()]);
+    }
+
+    //Approve Listing
+    public function approveListing(Listing $listing)
+    {
+        if (in_array(auth()->user()->role, ['admin', 'super-admin'])) {
+            $listing->is_verified = true;
+            $listing->save();
+            return back()->with('message', 'Post approved successfully');
+        }
     }
 }

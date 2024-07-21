@@ -55,18 +55,17 @@ class UserController extends Controller
     //verify email
     public function verifyEmail($otp)
     {
-            $user = User::where('otp_code', $otp)->first();
-            if(!$user){
-                return redirect('/')->with('message', 'Invalid verification token');
-
-            }else if(isset($user->email_verified_at)){
-                return redirect('/')->with('message', 'Account already verified');
-            }
-            $user->email_verified_at = now();
-            $user->save();
-            //login
-            auth()->login($user);
-            return redirect('/')->with('message', 'Account verified successfully!');
+        $user = User::where('otp_code', $otp)->first();
+        if (!$user) {
+            return redirect('/')->with('message', 'Invalid verification token');
+        } else if (isset($user->email_verified_at)) {
+            return redirect('/')->with('message', 'Account already verified');
+        }
+        $user->email_verified_at = now();
+        $user->save();
+        //login
+        auth()->login($user);
+        return redirect('/')->with('message', 'Account verified successfully!');
     }
 
     //Logout User
@@ -98,12 +97,16 @@ class UserController extends Controller
             'password' => 'required'
         ]);
 
+        $user = User::where('email', $formValidation['email'])->exists();
+
         //attmempt to log in user
         if (auth()->attempt($formValidation)) {
             $request->session()->regenerate();
 
             return redirect('/')->with('logged in successfully');
-        }
+        } else if (!$user) {
+            return back()->withErrors(['email' => 'Email provided is not registered'])->onlyInput('email');
+        };
 
         return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
     }
