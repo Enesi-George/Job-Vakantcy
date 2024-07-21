@@ -1,28 +1,41 @@
 <x-layout>
     @include('partials._hero')
     @include('partials._search')
-   
-    <div class="relative w-full">
-        <div class="md:grid md:grid-cols-3 gap-4 space-y-4 md:space-y-0 mx-4 relative">
-            <div class="md:col-span-2">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
-                    @php
-                        $verifiedListings = $listings->filter(fn($listing) => $listing->is_verified);
-                    @endphp
     
-                    @unless (count($verifiedListings) == 0)
-                        @foreach($verifiedListings as $index => $listing)
+    <div class="lg:grid lg:grid-cols-3 gap-4 space-y-4 md:space-y-0 mx-4">
+        {{-- Listings Container --}}
+        <div class="lg:col-span-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @php
+                    $verifiedListings = $listings->filter(fn($listing) => $listing->is_verified);
+                    $nonVerifiedListings = $listings->filter(fn($listing) => !$listing->is_verified);
+                @endphp
+
+                @unless (count($verifiedListings) == 0 && (!auth()->user() || !auth()->user()->role === 'admin'))
+                    @foreach($verifiedListings as $index => $listing)
+                        <x-listing-card :listing="$listing" />
+
+                        @if (($index + 1) % 4 == 0)
+                            <div class="md:col-span-2 lg:col-span-1 mt-6 p-4 bg-gray-100">
+                                ads space
+                            </div>
+                        @endif
+                    @endforeach
+
+                    @if(auth()->user() && auth()->user()->role === 'admin')
+                        @foreach($nonVerifiedListings as $index => $listing)
                             <x-listing-card :listing="$listing" />
+
                             @if (($index + 1) % 4 == 0)
-                                <div class="md:col-span-2 mt-6 p-4 bg-gray-100">
+                                <div class="md:col-span-2 lg:col-span-1 mt-6 p-4 bg-gray-100">
                                     ads space
                                 </div>
                             @endif
                         @endforeach
-                    @else
-                        <p>No job post found</p>
-                    @endunless
-                </div>
+                    @endif
+                @else
+                    <p>No listings found</p>
+                @endunless
             </div>
         
             <div class="mt-6 p-4 bg-gray-100 md:col-span-1 md:mt-0 hidden md:block">
@@ -46,9 +59,4 @@
             </ul>
         </div>
     </div>
-
-    {{-- Uncomment the following line if you want to display pagination links --}}
-    {{-- <div class="mt-6 p-4">
-        {{ $listings->links() }}
-    </div> --}}
 </x-layout>
