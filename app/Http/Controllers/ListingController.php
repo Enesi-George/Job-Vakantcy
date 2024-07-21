@@ -40,9 +40,22 @@ class ListingController extends Controller
 
     public function store(ListingRequest $request)
     {
-        try {
-            // Get the validated data as an array
-            $formFieldsValidation = $request->ListingDTO()->toArray();
+        try{
+
+       
+
+        $formFieldsValidation = $request->validate([
+            'title' => 'required',
+            'company' => ['required', Rule::unique('listings', 'company')],
+            'location' => 'required',
+            'website' => 'required',
+            'email' => ['required', 'email'],
+            'tags' => 'required',
+            'salary' => 'string|nullable',
+            'deadline' => 'string|nullable|date|after_or_equal:today', // Ensuring the date is today or in the future
+            'description' => 'required',
+            'requirements' => 'required'
+        ]);
 
             // Check if the user's email is verified
             if (!auth()->user()->email_verified_at) {
@@ -91,22 +104,34 @@ class ListingController extends Controller
             abort(403, 'Unauthorized Action');
         }
 
+
         try {
-            // Get the validated data as an array
-            $formFieldsValidation = $request->ListingDTO()->toArray();
+            // Validate the form fields
+            $formFieldsValidation = $request->validate([
+                'title' => 'required',
+                'company' => 'required',
+                'location' => 'required',
+                'website' => 'required',
+                'email' => ['required', 'email'],
+                'tags' => 'required',
+                'salary' => 'string|nullable',
+                'deadline' => 'string|nullable',
+                'description' => 'required',
+                'requirements' => 'required'
+            ]);
 
-            // Update the listing with the validated data
-            $listing->update($formFieldsValidation);
-
-            // Handle file upload by dispatching a job
+            // Handle file upload
             if ($request->hasFile('logo')) {
-                $logo = $request->file('logo');
-                $filePath = $logo->store('temp/' . uniqid(), 'local'); // Save the file to a temporary location
-                Log::info(['Controller: ' => $filePath]);
-                UploadImgLogoJob::dispatch($filePath, $listing->id, false); // Indicate it's a listing ID
+                $uploadedFileUrl = Cloudinary::upload($request->file('logo')->getRealPath())->getSecurePath();
+                $formFieldsValidation['logo'] = $uploadedFileUrl;
+                Log::info('Logo uploaded URL:', ['logo' => $uploadedFileUrl]);
             }
 
+            // Update the listing
+            $listing->update($formFieldsValidation);
+
             Log::info('Listing updated successfully:', $listing->toArray());
+
 
             // Redirect with a success message
             return back()->with('message', 'Post updated!');
@@ -118,7 +143,6 @@ class ListingController extends Controller
             return back()->with('error', 'Error while editing post. Please contact the administrative.');
         }
     }
-
 
     //show single Listing
     public function show(Listing $listing)
@@ -150,8 +174,16 @@ class ListingController extends Controller
     //Manage Listins
     public function manageListing()
     {
-        /** @var User $user */
-        $user = auth()->user();
-        return view('listings.manage', ['listings' => $user->listings()->get()]);
+        return view('listings.manage', ['listings' => auth()->user()->listings()->get()]);
+    }
+
+    //Approve Listing
+    public function approveListing(Listing $listing)
+    {
+        if (in_array(auth()->user()->role, ['admin', 'super-admin'])) {
+            $listing->is_verified = true;
+            $listing->save();
+            return back()->with('message', 'Post approved successfully');
+        }
     }
 }

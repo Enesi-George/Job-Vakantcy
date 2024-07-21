@@ -104,7 +104,24 @@
                             <i class="fa-solid fa-trash"></i> Delete
                         </button>
                     </form>
+
+                    @if(in_array(auth()->user()->role, ['admin', 'super-admin']) && !$listing->is_verified)
+                    <form method="POST" action="/listings/{{$listing->id}}/approve" >
+                        @csrf
+                        @method('PUT')
+                        <button class="hover:opacity-80 transition duration-200"> 
+                            <span class="text-red-700">&#10008;</span><span class="text-red-700 font-semibold">Approve</span>
+                        </button>
+                    </form>
+
+                    @elseif (in_array(auth()->user()->role, ['admin', 'super-admin']) && $listing->is_verified)
+                            <button class="hover:opacity-80 transition duration-200 text-green-700 font-semibold"> 
+                        <span >&check;</span><span >Approved</span>
+                    </button>
+                    @endif
                 </x-card>
+
+
             @endif
         @endauth
 
@@ -116,9 +133,6 @@
         Ads space
     </div>
 </div>
-
-
-
 
 </x-layout>
 

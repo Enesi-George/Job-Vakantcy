@@ -69,81 +69,17 @@ class UserController extends Controller
     //verify email
     public function verifyEmail($otp)
     {
-        Log::info("i am inside the verification controller");
-
-        try {
-            // Find the user by OTP code
-            $user = User::where('otp_code', $otp)->first();
-
-            // Log the user information for debugging
-            Log::info('$USER', ['user' => $user]);
-
-            // Check if the user exists
-            if (!$user) {
-                return redirect('/')->with('error', 'Invalid verification token');
-            }
-
-            // Check if the user's email is already verified
-            if ($user->email_verified_at) {
-                Log::info('Already verified');
-                return redirect('/')->with('message', 'Account already verified');
-            } else if ($user->otp_expires_at < now()) {
-                return redirect('/')->with('error', 'Verification token has expired');
-            }
-
-            $user->email_verified_at = now();
-            $user->save();
-            //login
-            auth()->login($user);
-            return redirect('/')->with('message', 'Account verified successfully!');
-        } catch (Exception $e) {
-            Log::error('Verification Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return redirect('/')->with('error', 'Error while verifying. Please contact the administrative.');
+        $user = User::where('otp_code', $otp)->first();
+        if (!$user) {
+            return redirect('/')->with('message', 'Invalid verification token');
+        } else if (isset($user->email_verified_at)) {
+            return redirect('/')->with('message', 'Account already verified');
         }
-    }
-
-    // Resend email verification OTP
-    public function resendVerifyEmailOtp()
-    {
-        try {
-            // Generate a random OTP
-            $otp = Str::random(6);
-
-            // Get the authenticated user
-            $user = Auth::user();
-
-            // // Check if the user is authenticated
-            // if (!$user) {
-            //     return response()->json(['error' => 'Unauthenticated.'], 401);
-            // }
-
-            // Check if the user's email is already verified
-            if ($user->email_verified_at) {
-                return back()->with('error', 'Account already verified');
-            }
-            // Set the OTP and expiration time
-            $user->otp_code = $otp;
-            $user->otp_expires_at = now()->addMinutes(10);
-            $user->save();
-
-            // Dispatch job to send email for email verification
-            SendEmailVerificationJob::dispatch($user);
-
-            // Return a success response
-            return back()->with(['message' => 'Verification OTP has been sent to your email.'], 200);
-        } catch (\Exception $e) {
-            // Log the error with a more descriptive message
-            Log::error('Error resending verification OTP', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-
-            // Return an error response
-            return back()->withErrors(['error' => 'Error while resending OTP. Please contact the administrator.'], 500);
-        }
+        $user->email_verified_at = now();
+        $user->save();
+        //login
+        auth()->login($user);
+        return redirect('/')->with('message', 'Account verified successfully!');
     }
 
     //Logout User
@@ -184,15 +120,19 @@ class UserController extends Controller
                 'password' => 'required'
             ]);
 
+            $user = User::where('email', $formValidation['email'])->exists();
+
             //attmempt to log in user
             if (auth()->attempt($formValidation)) {
                 $request->session()->regenerate();
 
                 return redirect('/')->with('logged in successfully');
-            }
+            } else if (!$user) {
+                return back()->withErrors(['email' => 'Email provided is not registered'])->onlyInput('email');
+            };
 
             return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
-        } catch (\Exception $e) {
+        }catch(\Exception $e) {
             Log::error('Login Error', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),

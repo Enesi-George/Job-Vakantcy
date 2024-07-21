@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Listing extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'title',
         'company',
@@ -20,9 +20,10 @@ class Listing extends Model
         'deadline',
         'description',
         'requirements',
-        'logo'
+        'logo',
+        'is_verified'
     ];
-    
+
 
     //instead of creating a protedted below, use Model::unguard() inside APP/ServiceProvider.php
     // protected $fillable = ['title', 'company', 'location', 'email','website', 'tags', 'description'];
@@ -40,8 +41,8 @@ class Listing extends Model
         }
     }
     //Relationship to User
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 }
-

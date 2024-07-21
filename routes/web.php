@@ -40,6 +40,9 @@ Route::get('/listings/{listing}', [ListingController::class, 'show']);
 //Delete Listing
 Route::delete('/listings/{listing}/delete', [ListingController::class, 'destroy'])->middleware('auth');
 
+//Admin approve listing
+Route::put('/listings/{listing}/approve', [ListingController::class, 'approveListing'])->middleware('auth');
+
 //REGISTER ROUTES
 //show register create form
 Route::get('/register', [UserController::class, 'create'])->middleware('guest');
@@ -62,12 +65,6 @@ Route::get('/login', [UserController::class, 'login'])->name('authorization')->m
 
 //Log In User 
 Route::post('/users/authenticate', [UserController::class, 'authenticate']);
-
-//show Edit user form
-Route::get('/user/edit', [UserController::class, 'edit'])->middleware('auth');
-
-// update user
-Route::put('/user/update', [UserController::class, 'update'])->middleware('auth');
 
 // reset password
 Route::put('/user/reset-password', [UserController::class, 'resetPassword'])->middleware('auth');
