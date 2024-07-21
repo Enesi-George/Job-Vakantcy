@@ -19,7 +19,7 @@
             <div class="flex flex-col items-center justify-center">
 
                 <img
-                    class="w-48 mr-6 mb-6"
+                    class="w-48 mr-6 mb-6 "
                     src="{{ $listing->logo ? $listing->logo : asset('/images/briefcase.png') }}"
                     alt=""
                 />

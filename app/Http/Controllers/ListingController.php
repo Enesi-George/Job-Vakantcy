@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Listing;
 use Illuminate\Http\Request;
+use App\Jobs\HandleFileUpload;
+use App\Jobs\UploadImgLogoJob;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\ListingRequest;
+use App\Http\Requests\EditListingRequest;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ListingController extends Controller
@@ -34,9 +38,11 @@ class ListingController extends Controller
         return view('listings.create');
     }
 
-    //store listing data from store
-    public function store(Request $request)
+    public function store(ListingRequest $request)
     {
+        try{
+
+       
 
         $formFieldsValidation = $request->validate([
             'title' => 'required',
@@ -51,29 +57,37 @@ class ListingController extends Controller
             'requirements' => 'required'
         ]);
 
-        // Check if the user's email is verified
-        if (!auth()->user()->email_verified_at) {
-            return redirect('/')->with('message', 'Account is not verified!');
+            // Check if the user's email is verified
+            if (!auth()->user()->email_verified_at) {
+                return redirect('/listings/create')->with('error', 'Account is not verified!. Please verify to continue');
+            }
+
+            $formFieldsValidation['user_id'] = auth()->id();
+
+            // Check if the user is an admin or super-admin
+            if (in_array(auth()->user()->role, ['admin', 'super-admin'])) {
+                $formFieldsValidation['is_verified'] = true;
+            }
+
+            // Create the data into the listing model
+            $listing = Listing::create($formFieldsValidation);
+
+            // Handle file upload by dispatching a job
+            if ($request->hasFile('logo')) {
+                $logo = $request->file('logo');
+                $filePath = $logo->store('temp/' . uniqid(), 'local'); // Save the file to a temporary location
+                Log::info(['Controller: ' => $filePath]);
+                UploadImgLogoJob::dispatch($filePath, auth()->id(), true); // Indicate it's a user ID
+            }
+
+            return redirect('/')->with('message', 'Post await admin approval!');
+        } catch (\Exception $e) {
+            Log::error('Create post Error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect('/')->with('error', 'Error while creating post. Please contact the administrative.');
         }
-
-        // Handle file upload
-        if ($request->hasFile('logo')) {
-            $uploadedFileUrl = cloudinary()->upload($request->file('logo')->getRealPath())->getSecurePath();
-            $formFieldsValidation['logo'] = $uploadedFileUrl;
-        }
-
-        $formFieldsValidation['user_id'] = auth()->id();
-
-        // Check if the user is an admin or super-admin
-        if (in_array(auth()->user()->role, ['admin', 'super-admin'])) {
-            $formFieldsValidation['is_verified'] = true;
-        }
-
-        //create the datas into the listing model
-        Listing::create($formFieldsValidation);
-
-        // Session::flash('message', 'job created successfully');
-        return redirect('/')->with('message', 'Post await admin approval!');
     }
 
     //Show edit form
@@ -83,12 +97,13 @@ class ListingController extends Controller
     }
 
     //update editted form
-    public function update(Request $request, Listing $listing)
+    public function update(EditListingRequest $request, Listing $listing)
     {
-        // Ensure logged in user is the owner before they could perform update operation
+        // Ensure the logged-in user is the owner before they can perform the update operation
         if ($listing->user_id != auth()->id()) {
             abort(403, 'Unauthorized Action');
         }
+
 
         try {
             // Validate the form fields
@@ -117,12 +132,15 @@ class ListingController extends Controller
 
             Log::info('Listing updated successfully:', $listing->toArray());
 
+
             // Redirect with a success message
             return back()->with('message', 'Post updated!');
         } catch (\Exception $e) {
-            // Log any exceptions that occur
-            Log::error('Error updating listing:', ['message' => $e->getMessage()]);
-            return back()->with('error', 'There was an error updating the post.');
+            Log::error('Edit post error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return back()->with('error', 'Error while editing post. Please contact the administrative.');
         }
     }
 
@@ -136,13 +154,21 @@ class ListingController extends Controller
     //delete single listing
     public function destroy(Listing $listing)
     {
-        //making sure logged in user is the owner before they could perform delete operation
-        if ($listing->user_id != auth()->id()) {
-            abort(403, 'Unauthorized Action');
-        }
+        try {
+            //making sure logged in user is the owner before they could perform delete operation
+            if ($listing->user_id != auth()->id()) {
+                abort(403, 'Unauthorized Action');
+            }
 
-        $listing->delete();
-        return redirect('/')->with('message', 'Listing deleted Successfully!');
+            $listing->delete();
+            return redirect('/')->with('message', 'Listing deleted Successfully!');
+        } catch (\Exception $e) {
+            Log::error('delete post error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return redirect('/')->with('error', 'Error while deleting post. Please contact the administrative.');
+        }
     }
 
     //Manage Listins

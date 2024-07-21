@@ -192,6 +192,7 @@
                 type="date"
                 class="border border-gray-200 rounded p-2 w-full"
                 name="deadline"
+                min="{{ date('Y-m-d') }}"  
                 value="{{ $listing->deadline }}"
             />
             @error('deadline')

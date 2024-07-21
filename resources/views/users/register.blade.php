@@ -7,22 +7,22 @@
             <p class="mb-4">Create an account to post gigs</p>
         </header>
 
-        <form method="POST" action="/users/">
+        <form method="POST" action="/users/" onsubmit="return validateForm()">
             @csrf
 
             <div class="mb-6">
-                <label for="name" class="inline-block text-lg mb-2">
-                    Name
-                </label>
+                <label for="name" class="inline-block text-lg mb-2">Name</label>
                 <input
                     type="text"
                     class="border border-gray-200 rounded p-2 w-full"
                     name="name"
+                    id="name"
                     value="{{ old('name') }}"
                 />
                 @error('name')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
+                <p id="nameError" class="text-red-500 text-xs mt-1" style="display:none;">Name must be in 'John Doe' format.</p>
             </div>
 
             <div class="mb-6">
@@ -31,6 +31,7 @@
                     type="email"
                     class="border border-gray-200 rounded p-2 w-full"
                     name="email"
+                    id="email"
                     value="{{ old('email') }}"
                 />
                 @error('email')
@@ -50,6 +51,9 @@
                 @error('password')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
+                <p id="passwordError" class="text-red-500 text-xs mt-1" style="display:none;">
+                    Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a digit, and a special character.
+                </p>
             </div>
 
             <div class="mb-6 relative">
@@ -60,7 +64,7 @@
                     name="password_confirmation"
                     id="password_confirmation"
                 />
-                <i class="fa fa-eye absolute right-3  cursor-pointer" id="togglePasswordConfirmation" onclick="togglePasswordVisibility('password_confirmation')"></i>
+                <i class="fa fa-eye absolute right-3 cursor-pointer" id="togglePasswordConfirmation" onclick="togglePasswordVisibility('password_confirmation')"></i>
                 @error('password_confirmation')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
@@ -80,4 +84,5 @@
             </div>
         </form>
     </x-card>
+
 </x-layout>

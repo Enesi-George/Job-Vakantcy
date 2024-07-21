@@ -7,7 +7,12 @@
         "watch": "mix watch --mix-config=webpack.mix.js",
         "type": "commonjs",
         "build": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "start": "pm2 start ./create-scheduler.sh --name scheduler",
+        "stop": "pm2 stop scheduler",
+        "restart": "pm2 restart scheduler",
+        "logs": "pm2 logs scheduler",
+        "schedule:run": "while true; do php artisan schedule:run; sleep 300; done"
     },
     "devDependencies": {
         "axios": "^1.1.2",

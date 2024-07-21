@@ -1,6 +1,17 @@
 
 <nav class="flex justify-between items-center px-8">
-    <a href="/" class="flex pb-1"><img class="w-24" src="{{ asset('images/briefcase.png') }}" alt="Logo"></a>
+    <a href="/" class="flex pb-1">
+        <img class="w-12 md:w-24" src="{{ asset('images/briefcase.png') }}" alt="Logo">
+        @if (!Request::is('/'))
+            <h1 class="text-3xl md:text-6xl font-bold uppercase text-white my-auto drop-shadow-md">
+                <span class="hover-switch">
+                    <span class="text-red-500 transition-colors duration-300 ease-in-out job">Job</span>
+                    <span class="text-gray-800 transition-colors duration-300 ease-in-out vakantcy">Vakanty</span>
+                </span>
+            </h1>
+            
+        @endif
+    </a>
     <ul class="flex space-x-6 mr-6 text-lg hidden lg:flex">
         @auth
             <span class="font-bold uppercase hidden md:inline">Welcome {{ auth()->user()->name }}!</span>
@@ -32,7 +43,7 @@
     </ul>
 
     <!-- Collapsible Dropdown Icon -->
-    <div id="dropdown-toggle" class="lg:hidden border border-1 py-2 px-6 rounded-lg cursor-pointer hover:bg-slate-200 hover:border-none hover:text-slate-600 transition duration-300  ">
+      <div id="dropdown-toggle" class="lg:hidden border border-1 py-2 px-6 rounded-lg cursor-pointer hover:bg-slate-200 hover:border-none hover:text-slate-600 transition duration-300  ">
         <button class="focus:outline-none text-2xl">
             <i class="fa-solid fa-bars"></i>
         </button>

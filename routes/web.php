@@ -53,6 +53,9 @@ Route::post('/users', [UserController::class, 'store']);
 //verify email
 Route::get('/verify-email/{otp}', [UserController::class, 'verifyEmail'])->name('verify.email');
 
+//resend verificaion otp
+Route::get('/user/resend-verify-email', [UserController::class, 'resendVerifyEmailOtp']);
+
 //log user out
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
 
@@ -62,3 +65,6 @@ Route::get('/login', [UserController::class, 'login'])->name('authorization')->m
 
 //Log In User 
 Route::post('/users/authenticate', [UserController::class, 'authenticate']);
+
+// reset password
+Route::put('/user/reset-password', [UserController::class, 'resetPassword'])->middleware('auth');
