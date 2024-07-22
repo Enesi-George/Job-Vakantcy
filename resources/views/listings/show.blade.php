@@ -109,8 +109,8 @@
                     <form method="POST" action="/listings/{{$listing->id}}/approve" >
                         @csrf
                         @method('PUT')
-                        <button class="hover:opacity-80 transition duration-200"> 
-                            <span class="text-red-700">&#10008;</span><span class="text-red-700 font-semibold">Approve</span>
+                        <button class="hover:opacity-80 transition duration-200 text-red-700 font-semibold"> 
+                            <span >&#10008;</span><span >Approve</span>
                         </button>
                     </form>
 
