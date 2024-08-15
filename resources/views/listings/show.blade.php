@@ -91,7 +91,7 @@
             </div>
         </x-card>
         @auth
-            @if(auth()->id() == $listing->user_id)
+            @if(auth()->id() == $listing->user_id || in_array( auth()->user()->role, ['admin', 'super-admin']))
                 <x-card class="mt-4 p-2 flex space-x-6">
                     <a href="/listings/{{ $listing->id }}/edit" class="hover:opacity-80 transition duration-200">
                         <i class="fa-solid fa-pencil"></i> Edit

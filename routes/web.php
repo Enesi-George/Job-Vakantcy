@@ -58,7 +58,7 @@ Route::put('/user/update', [UserController::class, 'edit'])->middleware('auth');
 Route::get('/verify-email/{otp}', [UserController::class, 'verifyEmail'])->name('verify.email');
 
 //resend verificaion otp
-Route::get('/user/resend-verify-email', [UserController::class, 'resendVerifyEmailOtp']);
+Route::get('/user/resend-verify-email', [UserController::class, 'resendVerifyEmailOtp'])->middleware('auth');
 
 //log user out
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
@@ -72,3 +72,4 @@ Route::post('/users/authenticate', [UserController::class, 'authenticate']);
 
 // reset password
 Route::put('/user/reset-password', [UserController::class, 'resetPassword'])->middleware('auth');
+// Route::put('/user/resed-otp', [UserController::class, 'resendVerifyEmailOtp'])->middleware('auth');

@@ -82,11 +82,28 @@ class UserController extends Controller
         return redirect('/')->with('message', 'Account verified successfully!');
     }
 
+    public function resendVerifyEmailOtp()
+    {
+        $otp = Str::random(6);
+        $user = Auth::user();
+
+        if (isset($user->email_verified_at)) {
+            return back()->with('message', 'Email has already been verified');
+        }
+
+        $user->otp_code = $otp;
+        $user->otp_expires_at = now()->addMinutes(10);
+        $user->update();
+
+        SendEmailVerificationJob::dispatch($user);
+
+        return back()->with('message', 'Kindly verify account via your mail');
+    }
     //Logout User
     public function logout(Request $request)
     {
         try {
-            auth()->logout(); //remove authenticatn infomation from the user session
+            auth()->logout(); 
 
             //invalidate user sessions
             $request->session()->invalidate();
@@ -132,7 +149,7 @@ class UserController extends Controller
             };
 
             return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             Log::error('Login Error', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),

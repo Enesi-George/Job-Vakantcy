@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 use App\Jobs\HandleFileUpload;
@@ -9,6 +10,7 @@ use App\Jobs\UploadImgLogoJob;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ListingRequest;
+use App\Jobs\AdminDisapprovedListJob;
 use App\Http\Requests\EditListingRequest;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
@@ -40,22 +42,22 @@ class ListingController extends Controller
 
     public function store(ListingRequest $request)
     {
-        try{
+        try {
 
-       
 
-        $formFieldsValidation = $request->validate([
-            'title' => 'required',
-            'company' => ['required', Rule::unique('listings', 'company')],
-            'location' => 'required',
-            'website' => 'required',
-            'email' => ['required', 'email'],
-            'tags' => 'required',
-            'salary' => 'string|nullable',
-            'deadline' => 'string|nullable|date|after_or_equal:today', // Ensuring the date is today or in the future
-            'description' => 'required',
-            'requirements' => 'required'
-        ]);
+
+            $formFieldsValidation = $request->validate([
+                'title' => 'required',
+                'company' => ['required', Rule::unique('listings', 'company')],
+                'location' => 'required',
+                'website' => 'required',
+                'email' => ['required', 'email'],
+                'tags' => 'required',
+                'salary' => 'string|nullable',
+                'deadline' => 'string|nullable|date|after_or_equal:today', // Ensuring the date is today or in the future
+                'description' => 'required',
+                'requirements' => 'required'
+            ]);
 
             // Check if the user's email is verified
             if (!auth()->user()->email_verified_at) {
@@ -155,11 +157,16 @@ class ListingController extends Controller
     public function destroy(Listing $listing)
     {
         try {
+
+            $user = User::query()->where('id', $listing->user_id)->get();
             //making sure logged in user is the owner before they could perform delete operation
-            if ($listing->user_id != auth()->id()) {
+            if ($listing->user_id != auth()->id() && auth()->user() != in_array(auth()->user()->role, ['admin', 'super-admin'])) {
                 abort(403, 'Unauthorized Action');
             }
 
+            // if (auth()->user()->role != in_array(auth()->user()->role, ['admin', 'super-admin'])) {
+            //     AdminDisapprovedListJob::dispatch($user);
+            // }
             $listing->delete();
             return redirect('/')->with('message', 'Listing deleted Successfully!');
         } catch (\Exception $e) {
