@@ -52,6 +52,7 @@ Route::post('/users', [UserController::class, 'store']);
 
 //show Edit user form
 Route::get('/user/edit', [UserController::class, 'edit'])->middleware('auth');
+Route::put('/user/update', [UserController::class, 'edit'])->middleware('auth');
 
 //verify email
 Route::get('/verify-email/{otp}', [UserController::class, 'verifyEmail'])->name('verify.email');
