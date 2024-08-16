@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Mail\VerifyEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\EditUserRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Jobs\SendEmailVerificationJob;
@@ -50,7 +52,10 @@ class UserController extends Controller
             $user->otp_expires_at = now()->addMinutes(10);
             $user->save();
             // Dispatch job to send email for email verification
-            SendEmailVerificationJob::dispatch($user);
+            // SendEmailVerificationJob::dispatch($user);
+
+            Mail::to($user->email)->send(new VerifyEmail($user));
+
 
             //login
             auth()->login($user);

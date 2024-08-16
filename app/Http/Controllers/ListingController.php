@@ -7,6 +7,7 @@ use App\Models\Listing;
 use App\Jobs\UploadImgLogoJob;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ListingRequest;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\EditListingRequest;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
@@ -71,7 +72,33 @@ class ListingController extends Controller
                 $logo = $request->file('logo');
                 $filePath = $logo->store('temp/' . uniqid(), 'local'); // Save the file to a temporary location
                 Log::info(['Controller: ' => $filePath]);
-                UploadImgLogoJob::dispatch($filePath, auth()->id(), true); // Indicate it's a user ID
+                // UploadImgLogoJob::dispatch($filePath, auth()->id(), true); // Indicate it's a user ID
+
+                if (!Storage::exists($filePath)) {
+                    Log::error('File does not exist', ['filePath' => $filePath]);
+                    return;
+                }
+
+                $fileRealPath = Storage::path($filePath);
+                $uploadedFileUrl = Cloudinary::upload($fileRealPath)->getSecurePath();
+                Log::info(['Job cloudinary url' => $uploadedFileUrl]);
+
+                $identifier = auth()->id();
+                $isUserId = true;
+
+
+                // Update the listing with the logo URL
+                $listing = $isUserId
+                    ? Listing::where('user_id', $identifier)->latest()->first()
+                    : Listing::find($identifier);
+
+                if ($listing) {
+                    $listing->logo = $uploadedFileUrl;
+                    $listing->save();
+                }
+
+                // Delete the temporary file
+                Storage::delete($filePath);
             }
 
             return redirect('/')->with('message', 'Post await admin approval!');

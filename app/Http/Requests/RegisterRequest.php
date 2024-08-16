@@ -37,7 +37,6 @@ class RegisterRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                'unique:users,name', 
                 'min:3',
                 'regex:/^[A-Z][a-z]+\s[A-Z][a-z]+$/'
             ],
