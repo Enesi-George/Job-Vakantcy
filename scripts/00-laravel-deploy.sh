@@ -15,6 +15,9 @@ php artisan key:generate --force
 echo "Running migrations..."
 php artisan migrate --force
 
+echo "database seeder seeding super-admin user"
+php artisan db:seed --force
+
 echo 'Running app schedule'
 php artisan schedule:run --no-interaction --quiet
 sleep 60
