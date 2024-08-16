@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 echo "Running composer"
 composer global require hirak/prestissimo
-composer install --no-dev --working-dir=/var/www/html
 
 echo "Caching config..."
 php artisan config:cache
@@ -17,6 +16,9 @@ php artisan migrate --force
 
 echo "database seeder seeding super-admin user"
 php artisan db:seed --force
+
+echo "Removing dev dependencies..."
+composer install --no-dev --working-dir=/var/www/html
 
 echo 'Running app schedule'
 php artisan schedule:run --no-interaction --quiet
