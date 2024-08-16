@@ -99,7 +99,9 @@ class UserController extends Controller
         $user->otp_expires_at = now()->addMinutes(10);
         $user->update();
 
-        SendEmailVerificationJob::dispatch($user);
+        // SendEmailVerificationJob::dispatch($user);
+        Mail::to($user->email)->send(new VerifyEmail($user));
+
 
         return back()->with('message', 'Kindly verify account via your mail');
     }
