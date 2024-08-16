@@ -16,14 +16,14 @@
         @auth
             <span class="font-bold uppercase hidden md:inline">Welcome {{ auth()->user()->name }}!</span>
             <li>
-                <a href="/listings/manage" class="hover:text-laravel transition duration-300">
+                <a href="/listings/manage" class="hover:text-laravel transition duration-300"  onclick="showSpinner()">
                     <i class="fa-solid fa-gear"></i> Settings
                 </a>
             </li>
             <li>
                 <form class="inline" method="POST" action="/logout">
                     @csrf
-                    <button type="submit">
+                    <button type="submit" >
                         <i class="fa-solid fa-door-closed"></i> Logout
                     </button>
                 </form>

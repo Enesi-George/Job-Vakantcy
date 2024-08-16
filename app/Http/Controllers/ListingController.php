@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Listing;
-use Illuminate\Http\Request;
-use App\Jobs\HandleFileUpload;
 use App\Jobs\UploadImgLogoJob;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ListingRequest;
-use App\Jobs\AdminDisapprovedListJob;
 use App\Http\Requests\EditListingRequest;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
@@ -32,8 +28,6 @@ class ListingController extends Controller
         ]);
     }
 
-
-
     //Show Create Form
     public function create()
     {
@@ -44,17 +38,15 @@ class ListingController extends Controller
     {
         try {
 
-
-
             $formFieldsValidation = $request->validate([
                 'title' => 'required',
-                'company' => ['required', Rule::unique('listings', 'company')],
+                'company' => ['required'],
                 'location' => 'required',
                 'website' => 'required',
                 'email' => ['required', 'email'],
                 'tags' => 'required',
                 'salary' => 'string|nullable',
-                'deadline' => 'string|nullable|date|after_or_equal:today', // Ensuring the date is today or in the future
+                'deadline' => 'string|nullable|date|after_or_equal:today',
                 'description' => 'required',
                 'requirements' => 'required'
             ]);
@@ -106,7 +98,6 @@ class ListingController extends Controller
             abort(403, 'Unauthorized Action');
         }
 
-
         try {
             // Validate the form fields
             $formFieldsValidation = $request->validate([
@@ -134,9 +125,8 @@ class ListingController extends Controller
 
             Log::info('Listing updated successfully:', $listing->toArray());
 
-
             // Redirect with a success message
-            return back()->with('message', 'Post updated!');
+            return redirect("/listings/{$listing->id}")->with('message', 'Post updated!');
         } catch (\Exception $e) {
             Log::error('Edit post error', [
                 'message' => $e->getMessage(),

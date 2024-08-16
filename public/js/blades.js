@@ -1,3 +1,19 @@
+document.addEventListener('alpine:init', () => {
+    Alpine.store('loading', true);
+});
+
+function showSpinner(event) {
+    if (event.target.matches('button, a') && !event.target.classList.contains('no-spinner')) {
+        Alpine.store('loading', true);
+    }
+}
+
+document.addEventListener('click', showSpinner);
+
+window.addEventListener('load', () => {
+    Alpine.store('loading', false);
+});
+
 // navbar
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -58,7 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
 //manage account
 document.addEventListener("DOMContentLoaded", function () {
     const managePostsToggle = document.getElementById("manage-account-toggle");
-    const managePostsContent = document.getElementById("manage-account-content");
+    const managePostsContent = document.getElementById(
+        "manage-account-content"
+    );
     const toggleIcon = document.getElementById("toggle-account-icon");
 
     managePostsToggle.addEventListener("click", function () {
@@ -74,30 +92,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
 //authentication
 //form validation
 
 function validateForm() {
-    const name = document.getElementById('name').value;
-    const password = document.getElementById('password').value;
+    const name = document.getElementById("name").value;
+    const password = document.getElementById("password").value;
     const nameRegex = /^[A-Z][a-z]+\s[A-Z][a-z]+$/;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     let isValid = true;
 
     if (!nameRegex.test(name)) {
-        document.getElementById('nameError').style.display = 'block';
+        document.getElementById("nameError").style.display = "block";
         isValid = false;
     } else {
-        document.getElementById('nameError').style.display = 'none';
+        document.getElementById("nameError").style.display = "none";
     }
 
     if (!passwordRegex.test(password)) {
-        document.getElementById('passwordError').style.display = 'block';
+        document.getElementById("passwordError").style.display = "block";
         isValid = false;
     } else {
-        document.getElementById('passwordError').style.display = 'none';
+        document.getElementById("passwordError").style.display = "none";
     }
 
     return isValid;
@@ -117,4 +135,3 @@ function togglePasswordVisibility(id) {
         toggleIcon.classList.add("fa-eye");
     }
 }
-

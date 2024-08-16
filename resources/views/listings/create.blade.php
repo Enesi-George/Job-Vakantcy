@@ -91,6 +91,7 @@ class="bg-gray-50 border border-gray-200 p-10 max-w-lg mx-auto mt-24"
             >Contact Email</label
         >
         <input
+            placeholder="maryjane@example.com"
             type="text"
             class="border border-gray-200 rounded p-2 w-full"
             name="email"
@@ -110,6 +111,7 @@ class="bg-gray-50 border border-gray-200 p-10 max-w-lg mx-auto mt-24"
             Website/Application URL
         </label>
         <input
+            placeholder="https://example.com"
             type="text"
             class="border border-gray-200 rounded p-2 w-full"
             name="website"

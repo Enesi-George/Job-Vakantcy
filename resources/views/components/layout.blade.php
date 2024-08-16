@@ -48,9 +48,9 @@
         }
     </style>
 </head>
-<body x-data="{ loading: true }" x-init="$nextTick(() => { loading = false; })">
+<body x-data>
     <!-- Spinner -->
-    <div x-show="loading" class="spinner fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50" style="display: flex;">
+    <div x-show="$store.loading" class="spinner fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50" style="display: none;">
         <div class="loader"></div>
     </div>
     
