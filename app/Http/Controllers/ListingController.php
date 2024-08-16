@@ -69,17 +69,7 @@ class ListingController extends Controller
 
             // Handle file upload by dispatching a job
             if ($request->hasFile('logo')) {
-                $logo = $request->file('logo');
-                // $filePath = $logo->store('temp/' . uniqid(), 'local'); // Save the file to a temporary location
-                // Log::info(['Controller: ' => $filePath]);
-                // UploadImgLogoJob::dispatch($filePath, auth()->id(), true); // Indicate it's a user ID
 
-                // if (!Storage::exists($filePath)) {
-                //     Log::error('File does not exist', ['filePath' => $filePath]);
-                //     return;
-                // }
-
-                // $fileRealPath = Storage::path($filePath);
                 $uploadedFileUrl = Cloudinary::upload($request->file('logo')->getRealPath())->getSecurePath();
                 $formFieldsValidation['logo'] = $uploadedFileUrl;
 
@@ -98,9 +88,6 @@ class ListingController extends Controller
                     $listing->logo = $uploadedFileUrl;
                     $listing->save();
                 }
-
-                // // Delete the temporary file
-                // Storage::delete($filePath);
             }
 
             return redirect('/')->with('message', 'Post await admin approval!');
