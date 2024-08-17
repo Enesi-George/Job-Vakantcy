@@ -9,13 +9,14 @@
                     <span class="text-gray-800 transition-colors duration-300 ease-in-out vakantcy">Vakanty</span>
                 </span>
             </h1>
-            
+        @else
+            @auth
+            <span class=" text-xl md:text-2xl font-bold my-auto lg:hidden uppercase text-xs">Welcome {{ auth()->user()->name }}!</span>
+            @endauth
         @endif
     </a>
 
-    @auth
-        <span class="font-bold lg:hidden uppercase text-xs">Welcome {{ auth()->user()->name }}!</span>
-    @endauth
+
     <ul class="flex space-x-6 mr-6 text-lg hidden lg:flex">
         @auth
             <span class="font-bold uppercase hidden md:inline">Welcome {{ auth()->user()->name }}!</span>
@@ -64,7 +65,9 @@
         </button> --}}
         <ul class="flex flex-col space-y-4 py-2 px-4">
             @auth
-                {{-- <span class="font-bold uppercase text-xs">Hi {{ auth()->user()->name }}!</span> --}}
+                @if (!Request::is('/'))
+                <span class="font-bold uppercase text-xs">Hi {{ auth()->user()->name }}!</span>
+                @endif
                 <li>
                     <a href="/listings/manage" class="hover:text-laravel transition duration-300">
                         <i class="fa-solid fa-gear"></i> Settings
