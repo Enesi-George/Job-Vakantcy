@@ -19,14 +19,6 @@ class ListingRequest extends FormRequest
         return true;
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $validator->errors();
-
-        // Redirect back with errors
-        throw new HttpResponseException(Redirect::back()->withErrors($errors)->withInput());
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -38,8 +30,8 @@ class ListingRequest extends FormRequest
             'title' => 'required|string|max:255',
             'company' => 'required|string|max:255',
             'location' => 'required|string|max:255',
-            'website' => 'required|url',
-            'email' => 'required|email',
+            'website' => 'nullable|url',
+            'email' => 'nullable|email',
             'tags' => 'required|string|max:255',
             'logo' => 'nullable|file|mimes:png,jpeg,jpg|max:5120', // file size is 5MB
             'salary' => 'nullable|string|max:255',

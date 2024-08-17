@@ -68,15 +68,18 @@
         </div>
 
     <footer
-        class="bottom-0 left-0 w-full flex items-center justify-start font-bold bg-laravel text-white h-24 opacity-90 md:justify-center"
+        class="bottom-0 z-10 font-bold bg-laravel text-white px-4 pb-4"
     >
-        <p class="ml-2">Copyright &copy; 2024, All Rights reserved</p>
+    <div class="left-0 w-full flex  items-center justify-center  opacity-90 md:justify-center"
+    >
+        <p class="ml-2 mt-5 text-center">Copyright &copy; 2024, All Rights reserved</p>
 
-        <a
-            href="/listings/create"
-            class="absolute right-10 bg-black text-white py-2 px-5 rounded-lg transition hover:opacity-90 duration-200"
-            >Post Job</a
-        >
+    </div>
+        <div class="mt-2">
+            <p class="underline">Advertise with us:</p>
+            <p>For Enquiry: jobvakantcy@gmail.com</p>
+            <p>Whatsapp: 08185449777</p>
+        </div>
     </footer>
 
     <script src="{{ asset('js/blades.js') }}"></script>

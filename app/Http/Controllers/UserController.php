@@ -69,7 +69,6 @@ class UserController extends Controller
             return redirect('/')->with('error', 'Error while registering. Please contact the administrative.');
         }
     }
-
     //verify email
     public function verifyEmail($otp)
     {

@@ -3,10 +3,9 @@
 <x-card>
     <div>
         
-        <div class="flex space-x-40 text-right ">
+        <div class="flex space-x-20 md:space-x-40 text-right ">
             @auth
                 <div>
-
                         @if(in_array(auth()->user()->role, ['admin', 'super-admin']) && !$listing->is_verified)
                         <div class="text-red-700 font-semibold">
                             <span class="text-red-700">&#10008;</span><span class="text-red-700 font-semibold">UnApprove</span>
@@ -21,7 +20,7 @@
             @else
             @endauth
 
-            <div>
+            <div >
             <i class="fa-solid fa-clock"></i>
             {{ $listing->updated_at->format('Y-m-d') }}
             </div>

@@ -37,16 +37,16 @@ class EditListingRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'company' => 'required',
+            'company' => 'required|string|max:255',
             'location' => 'required|string|max:255',
-            'website' => 'required|url',
-            'email' => ['required', 'email'],
-            'tags' => 'required|string',
-            'logo' => ['nullable', 'file', 'mimes:png,jpeg,jpg', 'max:5120'], //file size is 5mb
-            'salary' => 'nullable|string',
+            'website' => 'nullable|url',
+            'email' => 'nullable|email',
+            'tags' => 'required|string|max:255',
+            'logo' => 'nullable|file|mimes:png,jpeg,jpg|max:5120', // file size is 5MB
+            'salary' => 'nullable|string|max:255',
             'deadline' => 'nullable|date|after_or_equal:today', // Ensuring the date is today or in the future
-            'description' => 'required|string',
-            'requirements' => 'required|string',
+            'description' => ['required', 'string', Rule::unique('listings', 'description')],
+            'requirements' => 'required|string|max:255',
         ];
     }
 

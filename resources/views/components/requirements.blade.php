@@ -10,7 +10,7 @@
     <li
         class="text-left my-1 text-lg list-disc"
     >
-        <a href="/?requirement={{$requirement}}">{{$requirement}}</a>
+        <a href="/?requirement={{$requirement}}" style="pointer-events: none;">{{$requirement}}</a>
     </li>
     @endforeach
 

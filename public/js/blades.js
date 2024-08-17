@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function toggleDrawer() {
         dropdownMenu.classList.toggle("hidden");
-        body.classList.toggle("overflow-hidden");
+        // body.classList.toggle("overflow-hidden");
     }
 
     dropdownToggle.addEventListener("click", function () {

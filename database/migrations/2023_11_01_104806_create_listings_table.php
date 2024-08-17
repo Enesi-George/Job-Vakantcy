@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('deadline')->nullable();
             $table->string('requirements');
             $table->string('location');
-            $table->string('email');
-            $table->string('website');
+            $table->string('email')->nullable();
+            $table->string('website')->nullable();
             $table->text('description');
             $table->boolean('is_verified')->default(false);
             $table->timestamps();

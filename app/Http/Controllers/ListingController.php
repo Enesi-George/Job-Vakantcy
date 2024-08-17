@@ -39,18 +39,7 @@ class ListingController extends Controller
     {
         try {
 
-            $formFieldsValidation = $request->validate([
-                'title' => 'required',
-                'company' => ['required'],
-                'location' => 'required',
-                'website' => 'required',
-                'email' => ['required', 'email'],
-                'tags' => 'required',
-                'salary' => 'string|nullable',
-                'deadline' => 'string|nullable|date|after_or_equal:today',
-                'description' => 'required',
-                'requirements' => 'required'
-            ]);
+            $formFieldsValidation = $request->validated();
 
             // Check if the user's email is verified
             if (!auth()->user()->email_verified_at) {
@@ -116,18 +105,7 @@ class ListingController extends Controller
 
         try {
             // Validate the form fields
-            $formFieldsValidation = $request->validate([
-                'title' => 'required',
-                'company' => 'required',
-                'location' => 'required',
-                'website' => 'required',
-                'email' => ['required', 'email'],
-                'tags' => 'required',
-                'salary' => 'string|nullable',
-                'deadline' => 'string|nullable',
-                'description' => 'required',
-                'requirements' => 'required'
-            ]);
+            $formFieldsValidation = $request->validated();
 
             // Handle file upload
             if ($request->hasFile('logo')) {

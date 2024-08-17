@@ -75,18 +75,25 @@
 
                     </div>
                 <div class="mx-auto width w-1/2 space-y-6 mb-6 text-center">
+
+                    @if (isset($listing->email))
                     <a
                     href="mailto:{{ $listing->email }}"
-                    class="block bg-laravel text-white mt-6 py-2 rounded-xl hover:opacity-80 transition duration-200"
+                    class="no-spinner block bg-laravel text-white text-sm mt-6 py-2 rounded-xl hover:opacity-80 transition duration-200"
                     ><i class="fa-solid fa-envelope"></i>
-                    Contact Employer</a>
+                    Contact Employer</a> 
+                    @endif                 
 
+                    @if (isset($listing->website))
                     <a
                         href="{{ $listing->website }}"
                         target="_blank"
-                        class="block bg-black text-white py-2 rounded-xl hover:opacity-80 transition duration-200"
+                        class="no-spinner block bg-black text-white py-2 rounded-xl hover:opacity-80 transition duration-200"
                         ><i class="fa-solid fa-globe"></i> Visit
-                        Website</a >
+                        Website</a >                      
+                    @endif
+
+
                 </div>
             </div>
         </x-card>
